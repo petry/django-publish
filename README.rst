@@ -187,7 +187,11 @@ To run the tests for this app use the script:
 
 ::
 
-    tests/run_tests.sh
+    $ make test
+
+
+or simply ``$ nosetests`` on *publish* folder
+
 
 
 .. _Django: http://www.djangoproject.com/

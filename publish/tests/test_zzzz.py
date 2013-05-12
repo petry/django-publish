@@ -1,5 +1,6 @@
 from django.conf import settings
 from publish.tests import settings_for_test
+from publish.tests.helpers import _get_rendered_content
 
 settings.configure(settings_for_test)
 
@@ -22,14 +23,7 @@ from publish.admin import PublishableAdmin, PublishableStackedInline
 from publish.actions import publish_selected, delete_selected, _convert_all_published_to_html, undelete_selected
 from publish.utils import NestedSet
 from publish.signals import pre_publish, post_publish
-from publish.filters import PublishableRelatedFieldListFilter
-
-
-def _get_rendered_content(response):
-    content = getattr(response, 'rendered_content', None)
-    if content is not None:
-        return content
-    return response.content
+from publish.filters import PublishableRelatedFieldListFilter, FieldListFilter
 
 
 class TestNestedSet(TestCase):
@@ -101,8 +95,6 @@ class TestNestedSet(TestCase):
 
         self.failUnlessEqual(id(m1), id(self.nested.original(m1)))
         self.failUnlessEqual(id(m1), id(self.nested.original(MyObject('m1'))))
-
-
 
 
 class TestBasicPublishable(TestCase):
@@ -342,7 +334,6 @@ class TestPublishableManager(TestCase):
         self.failUnlessEqual(set([flat_page1.public, flat_page2.public]), set(FlatPage.objects.published()))
 
 
-
 class TestPublishableManyToMany(TestCase):
 
     def setUp(self):
@@ -411,8 +402,6 @@ class TestPublishableManyToMany(TestCase):
         self.failUnlessEqual([], list(self.flat_page.public.sites.all()))
 
         self.failIfEqual([], list(Site.objects.all()))
-
-
 
 
 class TestPublishableRecursiveForeignKey(TestCase):
@@ -585,6 +574,7 @@ class TestPublishableRecursiveForeignKey(TestCase):
         self.failUnlessEqual([], list(Page.objects.all()))
         self.failUnlessEqual([], list(Comment.objects.all()))
 
+
 class TestPublishableRecursiveManyToManyField(TestCase):
 
     def setUp(self):
@@ -635,6 +625,7 @@ class TestPublishableRecursiveManyToManyField(TestCase):
         self.page.publish()
         self.failUnlessEqual([], list(self.page.public.authors.all()))
 
+
 class TestInfiniteRecursion(TestCase):
 
     def setUp(self):
@@ -647,6 +638,7 @@ class TestInfiniteRecursion(TestCase):
 
     def test_publish_recursion_breaks(self):
         self.page1.publish() # this should simple run without an error
+
 
 class TestOverlappingPublish(TestCase):
 
@@ -718,6 +710,7 @@ class TestOverlappingPublish(TestCase):
         self.failUnlessEqual(page1.public, child1.public.parent)
         self.failUnlessEqual(page1.public, child2.public.parent)
         self.failUnlessEqual(page2.public, child3.public.parent)
+
 
 class TestPublishableAdmin(TestCase):
 
@@ -1266,11 +1259,7 @@ class TestDeleteSelected(TestCase):
     def test_delete_selected_check_cannot_delete_public(self):
         # delete won't work (via admin) for public instances
         request = None
-        try:
-            delete_selected(self.page_admin, request, FlatPage.objects.published())
-            fail()
-        except PermissionDenied:
-            pass
+        self.assertRaises(PermissionDenied, delete_selected, self.page_admin, request, FlatPage.objects.published())
 
     def test_delete_selected(self):
         class dummy_request(object):
@@ -1288,6 +1277,7 @@ class TestDeleteSelected(TestCase):
 
         response = delete_selected(self.page_admin, dummy_request, FlatPage.objects.draft())
         self.failUnless(response is not None)
+
 
 class TestUndeleteSelected(TestCase):
 
@@ -1329,11 +1319,8 @@ class TestUndeleteSelected(TestCase):
         self.fp1.delete()
         self.failUnlessEqual(Publishable.PUBLISH_DELETE, self.fp1.publish_state)
 
-        try:
-            undelete_selected(self.page_admin, dummy_request, FlatPage.objects.deleted())
-            fail()
-        except PermissionDenied:
-            pass
+        self.assertRaises(PermissionDenied, undelete_selected, self.page_admin, dummy_request, FlatPage.objects.deleted())
+
 
 class TestManyToManyThrough(TestCase):
 
@@ -1349,6 +1336,7 @@ class TestManyToManyThrough(TestCase):
         self.page.publish()
 
         self.failUnlessEqual(set([self.tag1, self.tag2]), set(self.page.public.tags.all()))
+
 
 class TestPublishFunction(TestCase):
 
@@ -1471,17 +1459,6 @@ class TestPublishSignals(TestCase):
         post_publish.connect(post_publish_handler, sender=Page)
 
         self.child1.publish()
-
-
-try:
-    from django.contrib.admin.filters import FieldListFilter
-except ImportError:
-    # pre 1.4
-    from django.contrib.admin.filterspecs import FilterSpec
-    class FieldListFilter(object):
-        @classmethod
-        def create(cls, field, request, params, model, model_admin, *arg, **kw):
-            return FilterSpec.create(field, request, params, model, model_admin)
 
 
 class TestPublishableRelatedFilterSpec(TestCase):

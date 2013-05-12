@@ -3,7 +3,13 @@ Django Publish
 ==============
 
 .. image:: https://travis-ci.org/petry/django-publish.png?branch=master
+    :target: https://travis-ci.org/petry/django-publish
+    :alt: CI status on Travis CI
+
 .. image:: https://codeq.io/github/petry/django-publish/badges/master.png
+    :target: https://codeq.io/github/petry/django-publish/branches/master
+    :alt: Quality score on Codeq
+
 
 Handy mixin/abstract class for providing a "publisher workflow" to arbitrary Django_ models.
 

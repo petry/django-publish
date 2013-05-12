@@ -1,7 +1,7 @@
 from django.test import TestCase
 from publish.tests.example_app.models import FlatPage
 
-__author__ = 'petry'
+
 
 
 class TestPublishableManager(TestCase):

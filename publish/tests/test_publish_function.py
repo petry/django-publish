@@ -1,7 +1,7 @@
 from django.test import TestCase
 from publish.tests.example_app.models import Page, update_pub_date
 
-__author__ = 'petry'
+
 
 
 class TestPublishFunction(TestCase):

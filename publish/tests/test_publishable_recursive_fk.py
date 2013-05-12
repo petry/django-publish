@@ -2,7 +2,7 @@ from django.test import TestCase
 from publish.models import Publishable
 from publish.tests.example_app.models import Page, PageBlock, Comment
 
-__author__ = 'petry'
+
 
 
 class TestPublishableRecursiveForeignKey(TestCase):

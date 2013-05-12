@@ -7,9 +7,6 @@ from publish.actions import delete_selected
 from publish.admin import PublishableAdmin
 from publish.tests.example_app.models import FlatPage
 
-__author__ = 'petry'
-
-
 class TestDeleteSelected(TestCase):
 
     def setUp(self):

@@ -2,7 +2,7 @@ from django.test import TestCase
 from publish.tests.example_app.models import Page
 from publish.utils import NestedSet
 
-__author__ = 'petry'
+
 
 
 class TestOverlappingPublish(TestCase):

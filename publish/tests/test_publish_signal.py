@@ -3,7 +3,7 @@ from publish.models import Publishable
 from publish.signals import pre_publish, post_publish
 from publish.tests.example_app.models import Page
 
-__author__ = 'petry'
+
 
 
 class TestPublishSignals(TestCase):

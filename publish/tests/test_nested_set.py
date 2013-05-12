@@ -1,7 +1,7 @@
 from django.test import TestCase
 from publish.utils import NestedSet
 
-__author__ = 'petry'
+
 
 
 class TestNestedSet(TestCase):

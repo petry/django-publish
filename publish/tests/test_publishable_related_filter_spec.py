@@ -3,7 +3,7 @@ from publish.admin import PublishableAdmin
 from publish.filters import FieldListFilter, PublishableRelatedFieldListFilter
 from publish.tests.example_app.models import Page, Author
 
-__author__ = 'petry'
+
 
 
 class TestPublishableRelatedFilterSpec(TestCase):

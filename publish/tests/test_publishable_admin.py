@@ -11,7 +11,7 @@ from publish.models import Publishable
 from publish.tests.example_app.models import Page, Author, PageBlock
 from publish.tests.helpers import _get_rendered_content
 
-__author__ = 'petry'
+
 
 
 class TestPublishableAdmin(TestCase):

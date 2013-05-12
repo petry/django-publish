@@ -8,7 +8,7 @@ from publish.admin import PublishableAdmin
 from publish.tests.example_app.models import Page, PageBlock, Author
 from publish.utils import NestedSet
 
-__author__ = 'petry'
+
 
 
 class TestPublishSelectedAction(TestCase):

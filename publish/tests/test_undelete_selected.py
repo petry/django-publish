@@ -6,7 +6,7 @@ from publish.admin import PublishableAdmin
 from publish.models import Publishable
 from publish.tests.example_app.models import FlatPage
 
-__author__ = 'petry'
+
 
 
 class TestUndeleteSelected(TestCase):

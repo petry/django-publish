@@ -3,9 +3,6 @@ from publish.models import Publishable, PublishException
 from publish.tests.example_app.models import FlatPage
 from publish.utils import NestedSet
 
-__author__ = 'petry'
-
-
 class TestBasicPublishable(TestCase):
 
     def setUp(self):

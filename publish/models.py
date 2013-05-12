@@ -210,7 +210,8 @@ class Publishable(models.Model):
         '''
         if self.is_public:
             raise PublishException(
-                "Cannot publish public model - publish should be called from draft model")
+                "Cannot publish public model - publish should be called "
+                "from draft model")
         if self.pk is None:
             raise PublishException("Please save model before publishing")
 
@@ -255,7 +256,8 @@ class Publishable(models.Model):
         information about what other models would be affected by this function
         '''
 
-        assert not self.is_public, "Cannot publish public model - publish should be called from draft model"
+        assert not self.is_public, "Cannot publish public model - publish " \
+                                   "should be called from draft model"
         assert self.pk is not None, "Please save model before publishing"
 
         # avoid mutual recursion
@@ -274,7 +276,8 @@ class Publishable(models.Model):
             public_version = self.__class__(is_public=True)
 
         excluded_fields = self.PublishMeta.excluded_fields()
-        reverse_fields_to_publish = self.PublishMeta.reverse_fields_to_publish()
+        reverse_fields_to_publish = \
+            self.PublishMeta.reverse_fields_to_publish()
 
         if self.publish_state == Publishable.PUBLISH_CHANGED:
             # copy over regular fields
@@ -327,10 +330,11 @@ class Publishable(models.Model):
                             related_name = reverse_field.name
                             related_field = getattr(through_model,
                                                     related_name).field
-                            reverse_name = related_field.related.get_accessor_name()
+                            reverse_name = \
+                                related_field.related.get_accessor_name()
                             reverse_fields_to_publish.append(reverse_name)
                             break
-                    continue #  m2m via through table won't be dealt with here
+                    continue  # m2m via through table won't be dealt with here
 
             related = field_object.rel.to
             if issubclass(related, Publishable):

@@ -25,6 +25,9 @@ class FlatPage(Publishable):
             return self.url
         return '%s*' % self.url
 
+    def __unicode__(self):
+        return "{0} - {1}".format(self.url, self.get_publish_state_display())
+
 
 class Author(Publishable):
     name = models.CharField(max_length=100)

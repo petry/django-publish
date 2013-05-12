@@ -239,11 +239,12 @@ class Publishable(models.Model):
         In 1.2 through is the class
         '''
         through = field_object.rel.through
-        if through:
-            if isinstance(through, basestring):
-                return field_object.rel.through_model
-            return through
-        return None
+        if not through:
+            return None
+
+        if isinstance(through, basestring):
+            return field_object.rel.through_model
+        return through
 
     def publish_changes(self, dry_run=False, all_published=None, parent=None):
         '''
@@ -405,6 +406,7 @@ class Publishable(models.Model):
             if name in self.PublishMeta.excluded_fields():
                 continue
             try:
+
                 instances = getattr(self, name).all()
             except AttributeError:
                 instances = [getattr(self, name)]

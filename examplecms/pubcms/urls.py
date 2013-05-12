@@ -1,8 +1,7 @@
 from django.conf.urls.defaults import *
-from django.conf import settings
 
-from views import page_detail
-from models import Page
+from pubcms.views import page_detail
+from pubcms.models import Page
 
 urlpatterns = patterns(
     '',

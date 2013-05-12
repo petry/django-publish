@@ -97,7 +97,6 @@ def publish_selected(modeladmin, request, queryset):
 
     perms_needed = []
     _check_permissions(modeladmin, all_published, request, perms_needed)
-    
     if request.POST.get('post'):
         if perms_needed:
             raise PermissionDenied

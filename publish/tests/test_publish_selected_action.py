@@ -94,7 +94,8 @@ class TestPublishSelectedAction(TestCase):
                                                    all_published)
 
         expected = [
-            u'<a href="../../example_app/page/%d/">Page: here (Changed - not yet published)</a>' % page.id,
+            u'<a href="../../example_app/page/%d/">Page: here (Changed - '
+            u'not yet published)</a>' % page.id,
             [u'Page block: PageBlock object']]
 
         self.failUnlessEqual(expected, converted)
@@ -198,5 +199,5 @@ class TestPublishSelectedAction(TestCase):
         from django.contrib.admin.models import LogEntry
         from django.contrib.contenttypes.models import ContentType
 
-        content_type_id = ContentType.objects.get_for_model(self.fp1).pk
+        ContentType.objects.get_for_model(self.fp1).pk
         self.failUnlessEqual(2, LogEntry.objects.filter().count())

@@ -94,7 +94,7 @@ class TestPublishSignals(TestCase):
 
     def test_deleted_flag_true_when_publishing_deletion(self):
         self.child1.publish()
-        public = self.child1.public
+        self.child1.public
 
         self.child1.delete()
 

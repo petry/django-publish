@@ -131,8 +131,7 @@ class TestPublishableRecursiveForeignKey(TestCase):
         self.failUnlessEqual(page_block.content, blocks[0].content)
 
     def test_publish_deletions_reverse_fields(self):
-        page_block = PageBlock.objects.create(page=self.page1,
-                                              content='here we are')
+        PageBlock.objects.create(page=self.page1, content='here we are')
 
         self.page1.publish()
         public = self.page1.public
@@ -173,8 +172,8 @@ class TestPublishableRecursiveForeignKey(TestCase):
     def test_publish_delections_with_non_publishable_children(self):
         self.page1.publish()
 
-        comment = Comment.objects.create(page=self.page1.public,
-                                         comment='This is a comment')
+        Comment.objects.create(page=self.page1.public,
+                               comment='This is a comment')
 
         self.failUnlessEqual(1, Comment.objects.count())
 

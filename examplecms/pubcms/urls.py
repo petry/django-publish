@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url
 
 from pubcms.views import page_detail
 from pubcms.models import Page

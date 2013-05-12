@@ -8,7 +8,8 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-from django.contrib.admin.actions import delete_selected as django_delete_selected
+from django.contrib.admin.actions import delete_selected as \
+    django_delete_selected
 
 from models import Publishable
 from utils import NestedSet

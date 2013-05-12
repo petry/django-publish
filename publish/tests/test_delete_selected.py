@@ -7,8 +7,8 @@ from publish.actions import delete_selected
 from publish.admin import PublishableAdmin
 from publish.tests.example_app.models import FlatPage
 
-class TestDeleteSelected(TestCase):
 
+class TestDeleteSelected(TestCase):
     def setUp(self):
         super(TestDeleteSelected, self).setUp()
         self.fp1 = FlatPage.objects.create(url='/fp1', title='FP1')
@@ -23,14 +23,17 @@ class TestDeleteSelected(TestCase):
         self.page_admin = PublishableAdmin(FlatPage, self.admin_site)
 
         # override urls, so reverse works
-        settings.ROOT_URLCONF=patterns('',
-            ('^admin/', include(self.admin_site.urls)),
+        settings.ROOT_URLCONF = patterns(
+            '',
+            ('^admin/',
+             include(self.admin_site.urls)),
         )
 
     def test_delete_selected_check_cannot_delete_public(self):
         # delete won't work (via admin) for public instances
         request = None
-        self.assertRaises(PermissionDenied, delete_selected, self.page_admin, request, FlatPage.objects.published())
+        self.assertRaises(PermissionDenied, delete_selected, self.page_admin,
+                          request, FlatPage.objects.published())
 
     def test_delete_selected(self):
         class dummy_request(object):
@@ -46,5 +49,6 @@ class TestDeleteSelected(TestCase):
                 def get_and_delete_messages(cls):
                     return []
 
-        response = delete_selected(self.page_admin, dummy_request, FlatPage.objects.draft())
+        response = delete_selected(self.page_admin, dummy_request,
+                                   FlatPage.objects.draft())
         self.failUnless(response is not None)

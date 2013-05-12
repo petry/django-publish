@@ -9,10 +9,7 @@ from publish.tests.example_app.models import Page, PageBlock, Author
 from publish.utils import NestedSet
 
 
-
-
 class TestPublishSelectedAction(TestCase):
-
     def setUp(self):
         super(TestPublishSelectedAction, self).setUp()
         self.fp1 = Page.objects.create(slug='fp1', title='FP1')
@@ -23,8 +20,10 @@ class TestPublishSelectedAction(TestCase):
         self.page_admin = PublishableAdmin(Page, self.admin_site)
 
         # override urls, so reverse works
-        settings.ROOT_URLCONF=patterns('',
-            ('^admin/', include(self.admin_site.urls)),
+        settings.ROOT_URLCONF = patterns(
+            '',
+            ('^admin/',
+             include(self.admin_site.urls)),
         )
 
     def test_publish_selected_confirm(self):
@@ -74,13 +73,11 @@ class TestPublishSelectedAction(TestCase):
                 def add(cls, *message):
                     self._message = message
 
-
         response = publish_selected(self.page_admin, dummy_request, pages)
 
-
         self.failUnlessEqual(2, Page.objects.published().count())
-        self.failUnless( getattr(self, '_message', None) is not None )
-        self.failUnless( response is None )
+        self.failUnless(getattr(self, '_message', None) is not None)
+        self.failUnless(response is None)
 
     def test_convert_all_published_to_html(self):
         self.admin_site.register(Page, PublishableAdmin)
@@ -93,9 +90,12 @@ class TestPublishSelectedAction(TestCase):
         all_published.add(page)
         all_published.add(block, parent=page)
 
-        converted = _convert_all_published_to_html(self.admin_site, all_published)
+        converted = _convert_all_published_to_html(self.admin_site,
+                                                   all_published)
 
-        expected = [u'<a href="../../example_app/page/%d/">Page: here (Changed - not yet published)</a>' % page.id, [u'Page block: PageBlock object']]
+        expected = [
+            u'<a href="../../example_app/page/%d/">Page: here (Changed - not yet published)</a>' % page.id,
+            [u'Page block: PageBlock object']]
 
         self.failUnlessEqual(expected, converted)
 
@@ -136,7 +136,7 @@ class TestPublishSelectedAction(TestCase):
         pages = Page.objects.draft()
 
         class dummy_request(object):
-            POST = { 'post': True }
+            POST = {'post': True}
 
             class _messages(object):
                 @classmethod
@@ -169,7 +169,7 @@ class TestPublishSelectedAction(TestCase):
         pages = Page.objects.exclude(id=self.fp3.id)
 
         class dummy_request(object):
-            POST = { 'post': True }
+            POST = {'post': True}
 
             class user(object):
                 pk = 1

@@ -1,7 +1,8 @@
 import re
 from setuptools import setup, find_packages, findall
 
-version=__import__('publish').__version__ 
+version = __import__('publish').__version__
+
 
 def parse_requirements(file_name):
     requirements = []
@@ -18,13 +19,18 @@ def parse_requirements(file_name):
 
 
 def not_py(file_path):
-    return not(file_path.endswith('.py') or file_path.endswith('.pyc'))
+    return not (file_path.endswith('.py') or file_path.endswith('.pyc'))
+
 
 core_packages = find_packages()
 core_package_data = {}
 for package in core_packages:
     package_path = package.replace('.', '/')
     core_package_data[package] = filter(not_py, findall(package_path))
+
+download_url = 'https://github.com/johnsensible/django-publish/archive/v%s.zip#egg=django-publish-%s' % (
+    version, version
+)
 
 setup(
     name='django-publish',
@@ -34,7 +40,7 @@ setup(
     author='John Montgomery',
     author_email='john@sensibledevelopment.com',
     url='http://github.com/johnsensible/django-publish',
-    download_url='https://github.com/johnsensible/django-publish/archive/v%s.zip#egg=django-publish-%s' % (version, version),
+    download_url=download_url,
     license='BSD',
     packages=core_packages,
     package_data=core_package_data,

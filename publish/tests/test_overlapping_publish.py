@@ -3,16 +3,16 @@ from publish.tests.example_app.models import Page
 from publish.utils import NestedSet
 
 
-
-
 class TestOverlappingPublish(TestCase):
-
     def setUp(self):
         self.page1 = Page.objects.create(slug='page1', title='page 1')
         self.page2 = Page.objects.create(slug='page2', title='page 2')
-        self.child1 = Page.objects.create(parent=self.page1, slug='child1', title='Child 1')
-        self.child2 = Page.objects.create(parent=self.page1, slug='child2', title='Child 2')
-        self.child3 = Page.objects.create(parent=self.page2, slug='child3', title='Child 3')
+        self.child1 = Page.objects.create(parent=self.page1, slug='child1',
+                                          title='Child 1')
+        self.child2 = Page.objects.create(parent=self.page1, slug='child2',
+                                          title='Child 2')
+        self.child3 = Page.objects.create(parent=self.page2, slug='child3',
+                                          title='Child 3')
 
     def test_publish_with_overlapping_models(self):
         # make sure when we publish we don't accidentally create
@@ -57,7 +57,8 @@ class TestOverlappingPublish(TestCase):
         self.failUnlessEqual(5, Page.objects.draft().count())
         self.failUnlessEqual(0, Page.objects.published().count())
 
-        # now publish (using same queryset, as this will have cached the instances)
+        # now publish (using same queryset,
+        # as this will have cached the instances)
         draft.publish()
 
         self.failUnlessEqual(5, Page.objects.draft().count())

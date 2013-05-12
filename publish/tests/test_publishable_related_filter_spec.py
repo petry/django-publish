@@ -4,8 +4,6 @@ from publish.filters import FieldListFilter, PublishableRelatedFieldListFilter
 from publish.tests.example_app.models import Page, Author
 
 
-
-
 class TestPublishableRelatedFilterSpec(TestCase):
 
     def test_overridden_spec(self):
@@ -14,7 +12,9 @@ class TestPublishableRelatedFilterSpec(TestCase):
         class dummy_request(object):
             GET = {}
 
-        spec = FieldListFilter.create(Page._meta.get_field('authors'), dummy_request, {}, Page, PublishableAdmin, None)
+        spec = FieldListFilter.create(
+            Page._meta.get_field('authors'),
+            dummy_request, {}, Page, PublishableAdmin, None)
         self.failUnless(isinstance(spec, PublishableRelatedFieldListFilter))
 
     def test_only_draft_shown(self):
@@ -28,7 +28,9 @@ class TestPublishableRelatedFilterSpec(TestCase):
         class dummy_request(object):
             GET = {}
 
-        spec = FieldListFilter.create(Page._meta.get_field('authors'), dummy_request, {}, Page, PublishableAdmin, None)
+        spec = FieldListFilter.create(
+            Page._meta.get_field('authors'), dummy_request, {},
+            Page, PublishableAdmin, None)
 
         lookup_choices = spec.lookup_choices
         self.failUnlessEqual(1, len(lookup_choices))

@@ -7,8 +7,6 @@ from publish.models import Publishable
 from publish.tests.example_app.models import FlatPage
 
 
-
-
 class TestUndeleteSelected(TestCase):
 
     def setUp(self):
@@ -29,9 +27,11 @@ class TestUndeleteSelected(TestCase):
                     return True
 
         self.fp1.delete()
-        self.failUnlessEqual(Publishable.PUBLISH_DELETE, self.fp1.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DELETE,
+                             self.fp1.publish_state)
 
-        response = undelete_selected(self.page_admin, dummy_request, FlatPage.objects.deleted())
+        response = undelete_selected(self.page_admin, dummy_request,
+                                     FlatPage.objects.deleted())
         self.failUnless(response is None)
 
         # publish state should no longer be delete
@@ -47,6 +47,10 @@ class TestUndeleteSelected(TestCase):
                     return False
 
         self.fp1.delete()
-        self.failUnlessEqual(Publishable.PUBLISH_DELETE, self.fp1.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DELETE,
+                             self.fp1.publish_state)
 
-        self.assertRaises(PermissionDenied, undelete_selected, self.page_admin, dummy_request, FlatPage.objects.deleted())
+        self.assertRaises(PermissionDenied,
+                          undelete_selected,
+                          self.page_admin, dummy_request,
+                          FlatPage.objects.deleted())

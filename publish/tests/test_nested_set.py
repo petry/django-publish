@@ -2,10 +2,7 @@ from django.test import TestCase
 from publish.utils import NestedSet
 
 
-
-
 class TestNestedSet(TestCase):
-
     def setUp(self):
         super(TestNestedSet, self).setUp()
         self.nested = NestedSet()
@@ -32,10 +29,12 @@ class TestNestedSet(TestCase):
         self.failUnlessEqual(['one'], self.nested.nested_items())
         self.nested.add('two')
         self.nested.add('one2', parent='one')
-        self.failUnlessEqual(['one', ['one2'], 'two'], self.nested.nested_items())
+        self.failUnlessEqual(['one', ['one2'], 'two'],
+                             self.nested.nested_items())
         self.nested.add('one2-1', parent='one2')
         self.nested.add('one2-2', parent='one2')
-        self.failUnlessEqual(['one', ['one2', ['one2-1', 'one2-2']], 'two'], self.nested.nested_items())
+        self.failUnlessEqual(['one', ['one2', ['one2-1', 'one2-2']], 'two'],
+                             self.nested.nested_items())
 
     def test_iter(self):
         self.failUnlessEqual(set(), set(self.nested))
@@ -66,7 +65,8 @@ class TestNestedSet(TestCase):
                 return hash(self.obj)
 
         # should always return an item at least
-        self.failUnlessEqual(MyObject('hi there'), self.nested.original(MyObject('hi there')))
+        self.failUnlessEqual(MyObject('hi there'),
+                             self.nested.original(MyObject('hi there')))
 
         m1 = MyObject('m1')
         self.nested.add(m1)

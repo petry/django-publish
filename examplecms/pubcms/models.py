@@ -2,16 +2,17 @@ from django.db import models
 from django.core.urlresolvers import reverse as reverse_url
 from publish.models import Publishable
 
+
 class Page(Publishable):
     title = models.CharField(max_length=200)
-    slug  = models.CharField(max_length=100, db_index=True)
-    
+    slug = models.CharField(max_length=100, db_index=True)
+
     parent = models.ForeignKey('self', blank=True, null=True)
 
     categories = models.ManyToManyField('Category', blank=True)
 
     class PublishMeta(Publishable.PublishMeta):
-        publish_reverse_fields=['pageblock_set']
+        publish_reverse_fields = ['pageblock_set']
 
     def __unicode__(self):
         return self.title
@@ -30,17 +31,20 @@ class Page(Publishable):
         else:
             return reverse_url('draft_page_detail', args=[url])
 
+
 class PageBlock(Publishable):
     page = models.ForeignKey(Page)
     content = models.TextField(blank=True)
     image = models.ForeignKey('Image', blank=True, null=True)
 
+
 class Image(Publishable):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/')
-    
+
     def __unicode__(self):
         return self.title
+
 
 class Category(Publishable):
     name = models.CharField(max_length=200)

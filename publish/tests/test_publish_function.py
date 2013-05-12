@@ -2,10 +2,7 @@ from django.test import TestCase
 from publish.tests.example_app.models import Page, update_pub_date
 
 
-
-
 class TestPublishFunction(TestCase):
-
     def setUp(self):
         super(TestPublishFunction, self).setUp()
         self.page = Page.objects.create(slug='page', title='Page')

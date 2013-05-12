@@ -3,8 +3,8 @@ from publish.models import Publishable, PublishException
 from publish.tests.example_app.models import FlatPage
 from publish.utils import NestedSet
 
-class TestBasicPublishable(TestCase):
 
+class TestBasicPublishable(TestCase):
     def setUp(self):
         super(TestBasicPublishable, self).setUp()
         self.flat_page = FlatPage(url='/my-page', title='my page',
@@ -18,14 +18,18 @@ class TestBasicPublishable(TestCase):
         self.assertTrue(self.flat_page.get_public_absolute_url() is None)
         self.flat_page.save()
         self.flat_page.publish()
-        self.failUnlessEqual('/my-page', self.flat_page.get_public_absolute_url())
+        self.failUnlessEqual('/my-page',
+                             self.flat_page.get_public_absolute_url())
 
     def test_save_marks_changed(self):
-        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT,
+                             self.flat_page.publish_state)
         self.flat_page.save(mark_changed=False)
-        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT,
+                             self.flat_page.publish_state)
         self.flat_page.save()
-        self.failUnlessEqual(Publishable.PUBLISH_CHANGED, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_CHANGED,
+                             self.flat_page.publish_state)
 
     def test_publish_excludes_fields(self):
         self.flat_page.save()
@@ -33,7 +37,8 @@ class TestBasicPublishable(TestCase):
         self.failUnless(self.flat_page.public)
         self.failIfEqual(self.flat_page.id, self.flat_page.public.id)
         self.failUnless(self.flat_page.public.is_public)
-        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT, self.flat_page.public.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT,
+                             self.flat_page.public.publish_state)
 
     def test_publish_check_is_not_public(self):
         try:
@@ -52,15 +57,20 @@ class TestBasicPublishable(TestCase):
 
     def test_publish_simple_fields(self):
         self.flat_page.save()
-        self.failUnlessEqual(Publishable.PUBLISH_CHANGED, self.flat_page.publish_state)
-        self.failIf(self.flat_page.public) # should not be a public version yet
+        self.failUnlessEqual(Publishable.PUBLISH_CHANGED,
+                             self.flat_page.publish_state)
+        # should not be a public version yet
+        self.failIf(self.flat_page.public)
 
         self.flat_page.publish()
-        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT,
+                             self.flat_page.publish_state)
         self.failUnless(self.flat_page.public)
 
-        for field in 'url', 'title', 'content', 'enable_comments', 'registration_required':
-            self.failUnlessEqual(getattr(self.flat_page, field), getattr(self.flat_page.public, field))
+        for field in 'url', 'title', 'content', 'enable_comments', \
+                     'registration_required':
+            self.failUnlessEqual(getattr(self.flat_page, field),
+                                 getattr(self.flat_page.public, field))
 
     def test_published_simple_field_repeated(self):
         self.flat_page.save()
@@ -71,7 +81,8 @@ class TestBasicPublishable(TestCase):
 
         self.flat_page.title = 'New Title'
         self.flat_page.save()
-        self.failUnlessEqual(Publishable.PUBLISH_CHANGED, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_CHANGED,
+                             self.flat_page.publish_state)
 
         self.failUnlessEqual(public, self.flat_page.public)
         self.failIfEqual(public.title, self.flat_page.title)
@@ -79,7 +90,8 @@ class TestBasicPublishable(TestCase):
         self.flat_page.publish()
         self.failUnlessEqual(public, self.flat_page.public)
         self.failUnlessEqual(public.title, self.flat_page.title)
-        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DEFAULT,
+                             self.flat_page.publish_state)
 
     def test_publish_records_published(self):
         all_published = NestedSet()
@@ -96,7 +108,8 @@ class TestBasicPublishable(TestCase):
         self.failUnlessEqual(1, len(all_published))
         self.failUnless(self.flat_page in all_published)
         self.failIf(self.flat_page.public)
-        self.failUnlessEqual(Publishable.PUBLISH_CHANGED, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_CHANGED,
+                             self.flat_page.publish_state)
 
     def test_delete_after_publish(self):
         self.flat_page.save()
@@ -105,9 +118,11 @@ class TestBasicPublishable(TestCase):
         self.failUnless(public)
 
         self.flat_page.delete()
-        self.failUnlessEqual(Publishable.PUBLISH_DELETE, self.flat_page.publish_state)
+        self.failUnlessEqual(Publishable.PUBLISH_DELETE,
+                             self.flat_page.publish_state)
 
-        self.failUnlessEqual(set([self.flat_page, self.flat_page.public]), set(FlatPage.objects.all()))
+        self.failUnlessEqual(set([self.flat_page, self.flat_page.public]),
+                             set(FlatPage.objects.all()))
 
     def test_delete_before_publish(self):
         self.flat_page.save()
@@ -119,10 +134,12 @@ class TestBasicPublishable(TestCase):
         self.flat_page.publish()
         public = self.flat_page.public
 
-        self.failUnlessEqual(set([self.flat_page, public]), set(FlatPage.objects.all()))
+        self.failUnlessEqual(set([self.flat_page, public]),
+                             set(FlatPage.objects.all()))
 
         self.flat_page.delete()
-        self.failUnlessEqual(set([self.flat_page, public]), set(FlatPage.objects.all()))
+        self.failUnlessEqual(set([self.flat_page, public]),
+                             set(FlatPage.objects.all()))
 
         self.flat_page.publish()
         self.failUnlessEqual([], list(FlatPage.objects.all()))
@@ -136,11 +153,13 @@ class TestBasicPublishable(TestCase):
 
         self.flat_page.delete()
 
-        self.failUnlessEqual(set([self.flat_page, public]), set(FlatPage.objects.all()))
+        self.failUnlessEqual(set([self.flat_page, public]),
+                             set(FlatPage.objects.all()))
 
         # this should effectively stop the deletion happening
         all_published = NestedSet()
         all_published.add(self.flat_page)
 
         self.flat_page.publish(all_published=all_published)
-        self.failUnlessEqual(set([self.flat_page, public]), set(FlatPage.objects.all()))
+        self.failUnlessEqual(set([self.flat_page, public]),
+                             set(FlatPage.objects.all()))

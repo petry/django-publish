@@ -91,10 +91,9 @@ class PublishableAdmin(admin.ModelAdmin):
         # user can never change public models directly
         # but can view old read-only copy of it if we are about to delete it
         if obj:
-            if obj.is_public or (
-                request.method == 'POST'
-                and obj.publish_state == Publishable.PUBLISH_DELETE
-            ):
+            if obj.is_public \
+                or (request.method == 'POST'
+                    and obj.publish_state == Publishable.PUBLISH_DELETE):
                 return False
         return super(PublishableAdmin, self).has_change_permission(request,
                                                                    obj)
@@ -151,12 +150,12 @@ class PublishableAdmin(admin.ModelAdmin):
 
     def response_publish(self, request, obj):
         opts = self.model._meta
-        msg_dict = {'name': force_text(opts.verbose_name), 'obj': force_text(obj)}
+        msg_dict = {'name': force_text(opts.verbose_name),
+                    'obj': force_text(obj)}
 
-        msg = _('The %(name)s "%(obj)s" was published successfully.') % msg_dict
+        msg = _('The %(name)s "%(obj)s" was published successfully') % msg_dict
         self.message_user(request, msg, fail_silently=True)
         return HttpResponseRedirect(request.path)
-
 
     @transaction.commit_on_success
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -166,7 +165,6 @@ class PublishableAdmin(admin.ModelAdmin):
             all_published = NestedSet()
             obj.publish(all_published=all_published)
             self.log_publication(request, obj)
-
 
             return self.response_publish(request, obj)
         return super(PublishableAdmin, self).change_view(request, object_id,

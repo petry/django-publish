@@ -365,8 +365,6 @@ class TestPublishableAdmin(TestCase):
 
 
 class PublishPage(TestCase):
-
-
     def setUp(self):
         super(PublishPage, self).setUp()
         self.admin_site = AdminSite('Test Admin')
@@ -380,25 +378,29 @@ class PublishPage(TestCase):
     def test_should_be_publish(self):
         self.page1 = Page.objects.create(slug='page1', title='page 1')
 
-        user1 = User.objects.create_superuser('test1', 'test@example.com', 'pass')
+        user1 = User.objects.create_superuser('test1', 'test@example.com',
+                                              'pass')
 
         self.factory = RequestFactory()
-        request = self.factory.post('/publish/change_view', data={'_publish':''})
+        request = self.factory.post('/publish/change_view',
+                                    data={'_publish': ''})
         request.user = user1
 
         self.page_admin.change_view(request, str(self.page1.id))
         self.assertEqual(Page.objects.filter(Page.Q_PUBLISHED,
-            slug=self.page1.slug).count(), 1)
+                                             slug=self.page1.slug).count(), 1)
 
     def test_should_be_republish(self):
         self.page1 = Page.objects.create(slug='page1', title='page 1')
         self.page1.publish()
-        user1 = User.objects.create_superuser('test1', 'test@example.com', 'pass')
+        user1 = User.objects.create_superuser('test1', 'test@example.com',
+                                              'pass')
 
         self.factory = RequestFactory()
-        request = self.factory.post('/publish/change_view', data={'_publish':''})
+        request = self.factory.post('/publish/change_view',
+                                    data={'_publish': ''})
         request.user = user1
 
         self.page_admin.change_view(request, str(self.page1.id))
         self.assertEqual(Page.objects.filter(Page.Q_PUBLISHED,
-            slug=self.page1.slug).count(), 1)
+                                             slug=self.page1.slug).count(), 1)

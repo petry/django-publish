@@ -35,7 +35,8 @@ download_url = 'https://github.com/johnsensible/django-publish/archive/v%s.zip#e
 setup(
     name='django-publish',
     version=version,
-    description='Handy mixin/abstract class for providing a "publisher workflow" to arbitrary Django models.',
+    description='Handy mixin/abstract class for providing a "publisher '
+                'workflow" to arbitrary Django models.',
     long_description=open('README.rst').read(),
     author='John Montgomery',
     author_email='john@sensibledevelopment.com',

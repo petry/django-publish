@@ -11,4 +11,4 @@ deps:
 setup: deps
 
 test: clean deps
-	@nosetests -s -v --with-coverage --cover-package=publish
+	@nosetests -s -v --with-coverage

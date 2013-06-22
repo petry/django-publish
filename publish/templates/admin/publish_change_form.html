@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_modify %}
+{% load i18n admin_modify publish_admin_tags%}
 
 {% block content %}<div id="content-main">
 {% block object-tools %}
@@ -46,15 +46,13 @@
 
 {% block after_related_objects %}{% endblock %}
 
-{% if not original or not original.is_marked_for_deletion %}{% submit_row %}{% endif %}
-
+{% if not original or not original.is_marked_for_deletion %}{% publish_submit_row %}{% endif %}
 {% if adminform and add %}
    <script type="text/javascript">document.getElementById("{{ adminform.first_field.auto_id }}").focus();</script>
 {% endif %}
 
 {# JavaScript for prepopulated fields #}
 {% prepopulated_fields_js %}
-
 </div>
 </form></div>
 {% endblock %}

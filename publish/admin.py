@@ -1,11 +1,17 @@
 from django.contrib import admin
+from django.contrib.admin.util import unquote
+from django.contrib.auth.admin import csrf_protect_m
+from django.db import transaction
 from django.forms.models import BaseInlineFormSet
-from django.utils.encoding import force_unicode
+from django.http import HttpResponseRedirect
+from django.utils.encoding import force_unicode, force_text
+from django.utils.translation import ugettext as _
 
 from .models import Publishable
 from .actions import publish_selected, delete_selected, undelete_selected
 
 from publish.filters import register_filters
+from publish.utils import NestedSet
 
 register_filters()
 
@@ -142,6 +148,30 @@ class PublishableAdmin(admin.ModelAdmin):
                                                                 context, add,
                                                                 change,
                                                                 form_url, obj)
+
+    def response_publish(self, request, obj):
+        opts = self.model._meta
+        msg_dict = {'name': force_text(opts.verbose_name), 'obj': force_text(obj)}
+
+        msg = _('The %(name)s "%(obj)s" was published successfully.') % msg_dict
+        self.message_user(request, msg, fail_silently=True)
+        return HttpResponseRedirect(request.path)
+
+
+    @transaction.commit_on_success
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        if request.method == "POST" and "_publish" in request.POST:
+            obj = self.get_object(request, unquote(object_id))
+
+            all_published = NestedSet()
+            obj.publish(all_published=all_published)
+            self.log_publication(request, obj)
+
+
+            return self.response_publish(request, obj)
+        return super(PublishableAdmin, self).change_view(request, object_id,
+                                                         form_url,
+                                                         extra_context)
 
 
 class PublishableBaseInlineFormSet(BaseInlineFormSet):

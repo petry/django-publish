@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.conf.urls import patterns, include
 from django.contrib.admin import AdminSite
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.forms import ModelChoiceField, ModelMultipleChoiceField
 from django.http import Http404
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from publish.admin import PublishableStackedInline, PublishableAdmin
 from publish.models import Publishable
 from publish.tests.example_app.models import Page, Author, PageBlock
@@ -272,6 +272,7 @@ class TestPublishableAdmin(TestCase):
             method = 'POST'
             COOKIES = {}
             META = {}
+            POST = {}
 
             @classmethod
             def is_ajax(cls):
@@ -361,3 +362,43 @@ class TestPublishableAdmin(TestCase):
 
         # the block should have been deleted (but not the public one)
         self.failUnlessEqual([public_block], list(PageBlock.objects.all()))
+
+
+class PublishPage(TestCase):
+
+
+    def setUp(self):
+        super(PublishPage, self).setUp()
+        self.admin_site = AdminSite('Test Admin')
+
+        class PageAdmin(PublishableAdmin):
+            pass
+
+        self.admin_site.register(Page, PageAdmin)
+        self.page_admin = PageAdmin(Page, self.admin_site)
+
+    def test_should_be_publish(self):
+        self.page1 = Page.objects.create(slug='page1', title='page 1')
+
+        user1 = User.objects.create_superuser('test1', 'test@example.com', 'pass')
+
+        self.factory = RequestFactory()
+        request = self.factory.post('/publish/change_view', data={'_publish':''})
+        request.user = user1
+
+        self.page_admin.change_view(request, str(self.page1.id))
+        self.assertEqual(Page.objects.filter(Page.Q_PUBLISHED,
+            slug=self.page1.slug).count(), 1)
+
+    def test_should_be_republish(self):
+        self.page1 = Page.objects.create(slug='page1', title='page 1')
+        self.page1.publish()
+        user1 = User.objects.create_superuser('test1', 'test@example.com', 'pass')
+
+        self.factory = RequestFactory()
+        request = self.factory.post('/publish/change_view', data={'_publish':''})
+        request.user = user1
+
+        self.page_admin.change_view(request, str(self.page1.id))
+        self.assertEqual(Page.objects.filter(Page.Q_PUBLISHED,
+            slug=self.page1.slug).count(), 1)

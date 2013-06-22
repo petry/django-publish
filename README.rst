@@ -10,6 +10,10 @@ Django Publish
     :target: https://codeq.io/github/petry/django-publish/branches/master
     :alt: Quality score on Codeq
 
+.. image:: https://coveralls.io/repos/petry/django-publish/badge.png?branch=master 
+    :target: https://coveralls.io/r/petry/django-publish
+    :alt: Coverage Status
+
 
 Handy mixin/abstract class for providing a "publisher workflow" to arbitrary Django_ models.
 

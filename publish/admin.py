@@ -1,6 +1,6 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.contrib.admin.util import unquote
-from django.contrib.auth.admin import csrf_protect_m
 from django.db import transaction
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
@@ -154,7 +154,8 @@ class PublishableAdmin(admin.ModelAdmin):
                     'obj': force_text(obj)}
 
         msg = _('The %(name)s "%(obj)s" was published successfully') % msg_dict
-        self.message_user(request, msg, fail_silently=True)
+
+        messages.success(request, msg, fail_silently=True)
         return HttpResponseRedirect(request.path)
 
     @transaction.commit_on_success
